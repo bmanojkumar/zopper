@@ -59,7 +59,7 @@ def dDev():
 
 
 
-@app.route('/api/devices/add',methods=['POST'])
+@app.route('/api/devices/add',methods=['GET','POST'])
 @cache.cached(timeout=50)
 def cDev():
 
@@ -77,7 +77,8 @@ def cDev():
 	except:
 		return jsonify(error={"err" : "Unable to insert."})
 
-
+	return jsonify(status={"success" : "Insert successfull"})
+	
 
 @app.route('/api/devices/update',methods=['PUT'])
 @cache.cached(timeout=50,key_prefix="update")
