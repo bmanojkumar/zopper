@@ -38,6 +38,11 @@ def index():
 	return render_template('home.html')
 
 
+@app.route('/benchmark')
+def bench():
+	return render_template('benchmark.html')
+
+
 
 @app.route('/api/devices/delete',methods=['DELETE'])
 @cache.cached(timeout=50)
@@ -84,11 +89,13 @@ def cDev():
 def ctDev():
 
 	if (request.method == 'GET'):
-		if not (request.args.get('fname') is None and request.args.get('trange') is None): 
-			f = request.args.get('fname')
-			t = request.args.get('trange')
+		if not request.json or not 'fname' in request.json or not 'trange' in request.json:
+			abort(400)
 
-			dev = Sighting(f, t)
+			n = request.json['fname']
+			m = request.json['trange']
+
+			dev = Sighting(n, m)
 			try:
 
 				db.session.add(dev)
