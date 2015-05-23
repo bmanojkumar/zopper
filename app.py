@@ -48,19 +48,18 @@ def bench():
 @cache.cached(timeout=50)
 def dDev():
 
-	if not request.json or not 'trange' in request.json:
-		return jsonify(error={"err" : "Unable to insert."})
+	if not (request.form.get('trange') is None): 
+		m = request.form.get('trange')
 
-	m = request.json['trange']
+		try:
 
-	try:
-
-		sql = text('DELETE from devices where trange = :f')
-#			query = "SELECT name from devices where trange >= 600 AND trange <= 800" 
-#			results = Sighting.query.from_statement(query).all()
-		results = db.engine.execute(sql,f=m)
-	except:
-		return jsonify(error={"err" : "Unable to insert."})
+			sql = text('DELETE from devices where trange = :f')
+	#			query = "SELECT name from devices where trange >= 600 AND trange <= 800" 
+	#			results = Sighting.query.from_statement(query).all()
+			results = db.engine.execute(sql,f=m)
+		except:
+			return jsonify(error={"err" : "Unable to delete."})
+	return jsonify(error={"err" : "Unable to delete."})
 
 
 
@@ -83,9 +82,10 @@ def cDev():
 
 	return jsonify(status={"success" : "Insert successfull"})
 	
+
+
 @app.route('/api/devices/add',methods=['POST'])
 def getDevicesk():
-	print request.args.get('fname')
 	if (request.method == 'POST'):
 		if not (request.form.get('fname') is None and request.form.get('trange') is None): 
 			f = request.form.get('fname')
@@ -102,43 +102,26 @@ def getDevicesk():
 	return jsonify(error={"err" : "Unable to insert."})	
 
 
-@app.route('/api/devices/add',methods=['POST'])
-def ctDev():
-	if (request.method == 'POST'):
-		print "possssssssssssssssssssss"
-		print request.args.get('fname')
-		if not (request.args.get('fname') is None and request.args.get('trange') is None): 
-			
-			n = request.args.get['fname']
-			m = request.args.get['trange']
-
-			dev = Sighting(n, m)
-			try:
-
-				db.session.add(dev)
-				db.session.commit()
-			except:
-				return jsonify(error={"err" : "Unable to insert."})
-
-			return jsonify(status={"success" : "Insert successfull"})
-	return jsonify(error={"err" : "Unable to insert."})	
 
 
 @app.route('/api/devices/update',methods=['PUT'])
-@cache.cached(timeout=50,key_prefix="update")
+#@cache.cached(timeout=50,key_prefix="update")
 def pDev():
+	if (request.method == 'PUT'):
+		if not (request.form.get('fname') is None and request.form.get('trange') is None): 
+			g = request.form.get('fname')
+			f = request.form.get('trange')
+			try:
 
-	if not request.json or not 'fname' in request.json or not 'trange' in request.json:
-		return jsonify(error={"err" : "Unable to insert."})
+				sql = text('UPDATE devices SET trange = :f where name = :g')
+				results = db.engine.execute(sql,f=m,g=n)
+			except:
+				return jsonify(error={"err" : "Unable to update."})
 
-	n = request.json['fname']
-	m = request.json['trange']
+			return jsonify(status={"success" : "Update successfull"})
+	return jsonify(error={"err" : "Unable to Update."})	
 
 	
-	sql = text('UPDATE devices SET trange = :f where name = :g')
-#			query = "SELECT name from devices where trange >= 600 AND trange <= 800" 
-#			results = Sighting.query.from_statement(query).all()
-	results = db.engine.execute(sql,f=m,g=n)
 	
 
 
