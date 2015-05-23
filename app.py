@@ -87,23 +87,21 @@ def cDev():
 
 @app.route('/api/devices/temp/add',methods=['GET'])
 def ctDev():
+	if not request.json or not 'fname' in request.json or not 'trange' in request.json:
+		abort(400)
 
-	if (request.method == 'GET'):
-		if not request.json or not 'fname' in request.json or not 'trange' in request.json:
-			abort(400)
+		n = request.json['fname']
+		m = request.json['trange']
 
-			n = request.json['fname']
-			m = request.json['trange']
+		dev = Sighting(n, m)
+		try:
 
-			dev = Sighting(n, m)
-			try:
+			db.session.add(dev)
+			db.session.commit()
+		except:
+			return jsonify(error={"err" : "Unable to insert."})
 
-				db.session.add(dev)
-				db.session.commit()
-			except:
-				return jsonify(error={"err" : "Unable to insert."})
-
-			return jsonify(status={"success" : "Insert successfull"})
+		return jsonify(status={"success" : "Insert successfull"})
 	
 
 
