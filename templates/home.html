@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+  <script>
+  $(document).ready(function() {
+  
+
+    $( "#s" ).click(function() {
+        var a  = $("#a1").val();
+        ajax_name(a);
+    });
+
+    $( "#s1" ).click(function() {
+        var a  = $("#b1").val();
+        var b = $("#b2").val();
+        ajax_range(a,b);
+    });
+    
+    function ajax_range(a,b) {
+
+        $.ajax({
+        url: "http://localhost:5000/api/devices/range",
+        type: "get", //send it through get method
+        dataType: 'json',
+        data:{ from: a, to: b},
+        success: function(response) {
+          //Do Something
+          console.log(response);
+          $("#container").empty();
+          for(var i=0;i<response.items.length;i++)
+          {
+              $("#container").append("<p>" + response.items[i].Name + "</p>");
+          }
+        },
+        error: function(xhr) {
+          //Do Something to handle error
+        }
+    });
+
+
+    }
+
+    function ajax_name(param){
+
+        $.ajax({
+        url: "http://localhost:5000/api/devices/namesearch",
+        type: "get", //send it through get method
+        dataType: 'json',
+        data:{ fname: param},
+        success: function(response) {
+          //Do Something
+          console.log(response);
+          $("#container").empty();
+          for(var i=0;i<response.items.length;i++)
+          {
+              $("#container").append("<p>" + response.items[i].Name +  " -- " +  response.items[i].Range + "</p>");
+          }
+        },
+        error: function(xhr) {
+          //Do Something to handle error
+        }
+    });
+
+    }
+   
+    
+
+  });
+  </script>
+  </head>
+  <body>   
+    <header>
+      <div class="container">
+        <h1 class="logo">Flask App</h1>
+      </div>
+    </header> 
+
+    <input type="text" id="a1">
+    <input type="button" id="s" value="Submit">
+
+    <input type="text" id="b1">
+    <input type="text" id="b2">
+    <input type="button" id="s1" value="Submit">
+
+
+
+    <div id="container">
+    
+    </div>
+
+    <div id="container2">
+    
+    </div>
+
+  </body>
+</html>
