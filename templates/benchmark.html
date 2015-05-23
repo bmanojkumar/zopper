@@ -19,23 +19,18 @@
     } 
 
     $( "#s" ).click(function() {
-        var a  = $("#p").val();
-
-          while(a-- > 0)
+        var a  = $("#add").val();
+          while(a > 0)
           {
             var p = randomstring(10);
             var q = Math.floor((Math.random() * 100) + 1);
             ajax_insert(p,q);
+            a = a-1;
           }
         
     });
 
-    $( "#s1" ).click(function() {
-        var a  = $("#b1").val();
-        var b = $("#b2").val();
-        ajax_range(a,b);
-    });
-    
+  
     function ajax_insert(p,q)
     {
         var start_time = new Date().getTime();
@@ -51,13 +46,13 @@
           $("#container").empty();
           for(var i=0;i<response.items.length;i++)
           {
-              $("#container").append("<h4> Inserted value : " + p + "--  " + q  + "Time for request : "  +  request_time+ " ms" + "</h4>");
+              $("#container").append("<h2> Inserted value : " + p + "--  " + q  + "  Time for request : "  +  request_time+ " ms" + "</h2>");
           }
         },
         error: function(xhr) {
           //Do Something to handle error
           var request_time = new Date().getTime() - start_time;
-          $("#container").append("<h4> API request failed for : " + p + "--  " + q  + "Time for request : "  +  request_time+ " ms" + "</h4>");
+          $("#container").append("<h2> API request failed for : " + p + "--  " + q  + "  Time for request : "  +  request_time+ " ms" + "</h2>");
         }
     });
 
