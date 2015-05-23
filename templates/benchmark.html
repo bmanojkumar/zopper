@@ -19,6 +19,8 @@
     } 
 
     $( "#s" ).click(function() {
+                $("#container").empty();
+
         var a  = $("#add").val();
           while(a > 0)
           {
@@ -35,19 +37,20 @@
     {
         var start_time = new Date().getTime();
         $.ajax({
-        url: "https://elixier.herokuapp.com/api/devices/temp/add",
-        type: "get", //send it through get method
+        url: "https://elixier.herokuapp.com/api/devices/add",
+        type: "post", 
         dataType: 'json',
         data:{ fname: p, trange: q},
         success: function(response) {
           //Do Something
           var request_time = new Date().getTime() - start_time;
           console.log(response);
-          $("#container").empty();
-          for(var i=0;i<response.items.length;i++)
-          {
+          
               $("#container").append("<h2> Inserted value : " + p + "--  " + q  + "  Time for request : "  +  request_time+ " ms" + "</h2>");
-          }
+              var time = parseInt($("#tt").text());
+              time = time +  parseInt(request_time);
+              $("#tt").text(time);
+
         },
         error: function(xhr) {
           //Do Something to handle error
@@ -59,28 +62,7 @@
 
     }
 
-    function ajax_name(param){
-
-        $.ajax({
-        url: "https://elixier.herokuapp.com/api/devices/namesearch",
-        type: "get", //send it through get method
-        dataType: 'json',
-        data:{ fname: param},
-        success: function(response) {
-          //Do Something
-          console.log(response);
-          $("#container").empty();
-          for(var i=0;i<response.items.length;i++)
-          {
-              $("#container").append("<p>" + response.items[i].Name +  " -- " +  response.items[i].Range + "</p>");
-          }
-        },
-        error: function(xhr) {
-          //Do Something to handle error
-        }
-    });
-
-    }
+    
    
     
 
@@ -91,6 +73,7 @@
     <header>
       <div class="container">
         <h1 class="logo">Flask App</h1>
+        <div id="tt">0</div>
       </div>
     </header> 
 

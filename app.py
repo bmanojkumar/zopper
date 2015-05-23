@@ -49,7 +49,7 @@ def bench():
 def dDev():
 
 	if not request.json or not 'trange' in request.json:
-		abort(400)
+		return jsonify(error={"err" : "Unable to insert."})
 
 	m = request.json['trange']
 
@@ -64,11 +64,11 @@ def dDev():
 
 
 
-@app.route('/api/devices/add',methods=['POST'])
+@app.route('/api/devices/temp/add',methods=['POST'])
 def cDev():
 
 	if not request.json or not 'fname' in request.json or not 'trange' in request.json:
-		abort(400)
+		return jsonify(error={"err" : "Unable to insert."})
 
 	n = request.json['fname']
 	m = request.json['trange']
@@ -83,26 +83,45 @@ def cDev():
 
 	return jsonify(status={"success" : "Insert successfull"})
 	
+@app.route('/api/devices/add',methods=['POST'])
+def getDevicesk():
+	print request.args.get('fname')
+	if (request.method == 'POST'):
+		if not (request.form.get('fname') is None and request.form.get('trange') is None): 
+			f = request.form.get('fname')
+			t = request.form.get('trange')
+			dev = Sighting(f, t)
+			try:
+
+				db.session.add(dev)
+				db.session.commit()
+			except:
+				return jsonify(error={"err" : "Unable to insert."})
+
+			return jsonify(status={"success" : "Insert successfull"})
+	return jsonify(error={"err" : "Unable to insert."})	
 
 
-@app.route('/api/devices/temp/add',methods=['GET'])
+@app.route('/api/devices/add',methods=['POST'])
 def ctDev():
-	if not request.json or not 'fname' in request.json or not 'trange' in request.json:
-		abort(400)
+	if (request.method == 'POST'):
+		print "possssssssssssssssssssss"
+		print request.args.get('fname')
+		if not (request.args.get('fname') is None and request.args.get('trange') is None): 
+			
+			n = request.args.get['fname']
+			m = request.args.get['trange']
 
-	n = request.json['fname']
-	m = request.json['trange']
+			dev = Sighting(n, m)
+			try:
 
-	dev = Sighting(n, m)
-	try:
+				db.session.add(dev)
+				db.session.commit()
+			except:
+				return jsonify(error={"err" : "Unable to insert."})
 
-		db.session.add(dev)
-		db.session.commit()
-	except:
-		return jsonify(error={"err" : "Unable to insert."})
-
-	return jsonify(status={"success" : "Insert successfull"})
-
+			return jsonify(status={"success" : "Insert successfull"})
+	return jsonify(error={"err" : "Unable to insert."})	
 
 
 @app.route('/api/devices/update',methods=['PUT'])
@@ -110,7 +129,7 @@ def ctDev():
 def pDev():
 
 	if not request.json or not 'fname' in request.json or not 'trange' in request.json:
-		abort(400)
+		return jsonify(error={"err" : "Unable to insert."})
 
 	n = request.json['fname']
 	m = request.json['trange']

@@ -18,7 +18,6 @@
     });
     
     function ajax_range(a,b) {
-        var start_time = new Date().getTime();
         $.ajax({
         url: "https://elixier.herokuapp.com/api/devices/range",
         type: "get", //send it through get method
@@ -26,12 +25,11 @@
         data:{ from: a, to: b},
         success: function(response) {
           //Do Something
-          var request_time = new Date().getTime() - start_time;
           console.log(response);
           $("#container").empty();
           for(var i=0;i<response.items.length;i++)
           {
-              $("#container").append("<p>" + response.items[i].Name + "   -Time : " + request_time"</p>");
+              $("#container").append("<p>" + response.items[i].Name + "</p>");
           }
         },
         error: function(xhr) {
