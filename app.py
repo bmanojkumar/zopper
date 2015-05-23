@@ -30,6 +30,8 @@ class Sighting(db.Model):
 
 
 db.create_all()
+db.session.commit()
+
 
 @app.route('/')
 def index():
