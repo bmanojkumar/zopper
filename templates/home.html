@@ -20,7 +20,7 @@
     function ajax_range(a,b) {
 
         $.ajax({
-        url: "http://localhost:5000/api/devices/range",
+        url: "https://elixier.herokuapp.com/api/devices/range",
         type: "get", //send it through get method
         dataType: 'json',
         data:{ from: a, to: b},
@@ -44,7 +44,7 @@
     function ajax_name(param){
 
         $.ajax({
-        url: "http://localhost:5000/api/devices/namesearch",
+        url: "https://elixier.herokuapp.com/api/devices/namesearch",
         type: "get", //send it through get method
         dataType: 'json',
         data:{ fname: param},
