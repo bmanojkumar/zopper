@@ -59,8 +59,7 @@ def dDev():
 
 
 
-@app.route('/api/devices/add',methods=['GET','POST'])
-@cache.cached(timeout=50)
+@app.route('/api/devices/add',methods=['POST'])
 def cDev():
 
 	if not request.json or not 'fname' in request.json or not 'trange' in request.json:
@@ -79,6 +78,27 @@ def cDev():
 
 	return jsonify(status={"success" : "Insert successfull"})
 	
+
+
+@app.route('/api/devices/temp/add',methods=['GET'])
+def ctDev():
+
+	if (request.method == 'GET'):
+		if not (request.args.get('fname') is None and request.args.get('trange') is None): 
+			f = request.args.get('fname')
+			t = request.args.get('trange')
+
+			dev = Sighting(f, t)
+			try:
+
+				db.session.add(dev)
+				db.session.commit()
+			except:
+				return jsonify(error={"err" : "Unable to insert."})
+
+			return jsonify(status={"success" : "Insert successfull"})
+	
+
 
 @app.route('/api/devices/update',methods=['PUT'])
 @cache.cached(timeout=50,key_prefix="update")
