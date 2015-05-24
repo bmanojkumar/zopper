@@ -43,9 +43,9 @@ def bench():
 	return render_template('benchmark.html')
 
 
-
+#ok
 @app.route('/api/devices/delete',methods=['DELETE'])
-@cache.cached(timeout=50)
+#@cache.cached(timeout=50)
 def dDev():
 
 	if not (request.form.get('trange') is None): 
@@ -57,33 +57,34 @@ def dDev():
 	#			query = "SELECT name from devices where trange >= 600 AND trange <= 800" 
 	#			results = Sighting.query.from_statement(query).all()
 			results = db.engine.execute(sql,f=m)
+			return jsonify(status={"success" : "Delete successfull"})
 		except:
-			return jsonify(error={"err" : "Unable to delete."})
-	return jsonify(error={"err" : "Unable to delete."})
+			return jsonify(status={"err" : "Unable to delete."})
+	return jsonify(status={"err" : "Unable to delete."})
 
 
 
-@app.route('/api/devices/temp/add',methods=['POST'])
-def cDev():
+# @app.route('/api/devices/temp/add',methods=['POST'])
+# def cDev():
 
-	if not request.json or not 'fname' in request.json or not 'trange' in request.json:
-		return jsonify(error={"err" : "Unable to insert."})
+# 	if not request.json or not 'fname' in request.json or not 'trange' in request.json:
+# 		return jsonify(error={"err" : "Unable to insert."})
 
-	n = request.json['fname']
-	m = request.json['trange']
+# 	n = request.json['fname']
+# 	m = request.json['trange']
 
-	dev = Sighting(n, m)
-	try:
+# 	dev = Sighting(n, m)
+# 	try:
 
-		db.session.add(dev)
-		db.session.commit()
-	except:
-		return jsonify(error={"err" : "Unable to insert."})
+# 		db.session.add(dev)
+# 		db.session.commit()
+# 	except:
+# 		return jsonify(error={"err" : "Unable to insert."})
 
-	return jsonify(status={"success" : "Insert successfull"})
+# 	return jsonify(status={"success" : "Insert successfull"})
 	
 
-
+#ok ok
 @app.route('/api/devices/add',methods=['POST'])
 def getDevicesk():
 	if (request.method == 'POST'):
@@ -103,7 +104,7 @@ def getDevicesk():
 
 
 
-
+#not ok
 @app.route('/api/devices/update',methods=['PUT'])
 #@cache.cached(timeout=50,key_prefix="update")
 def pDev():
@@ -125,9 +126,8 @@ def pDev():
 	
 
 
-
+#OK
 @app.route('/api/devices/namesearch',methods=['GET','POST'])
-@cache.cached(timeout=10,key_prefix="name1")
 def getDevicesname():
 	if (request.method == 'GET'):
 		if not request.args.get('fname') is None:
@@ -144,9 +144,8 @@ def getDevicesname():
 				return jsonify(items=json_results)
 
 
-
+#OK
 @app.route('/api/devices/range',methods=['GET','POST'])
-@cache.cached(timeout=10,key_prefix="range1")
 def getDevices():
 	if (request.method == 'GET'):
 		if not (request.args.get('from') is None and request.args.get('to') is None): 
@@ -168,9 +167,8 @@ def getDevices():
 
 
 
-
+#OK
 @app.route('/api/devices/<int:device_id>',methods=['GET'])
-@cache.cached(timeout=50,key_prefix="key1")
 def getDevice(device_id):
 	if request.method == 'GET':
 		results = Sighting.query.filter_by(id=device_id).all()

@@ -32,6 +32,49 @@
         
     });
 
+    $( "#ss" ).click(function() {
+                $("#container").empty();
+
+        var a  = $("#sget").val();
+          while(a > 0)
+          {
+            var q = Math.floor((Math.random() * 2000) + 1);
+            ajax_get(p);
+            a = a-1;
+          }
+        
+    });
+
+
+    function ajax_get(p)
+    {
+        var start_time = new Date().getTime();
+        $.ajax({
+        url: "https://elixier.herokuapp.com/api/devices/" + p,
+        type: "get", 
+        dataType: 'json',
+        success: function(response) {
+          //Do Something
+          var request_time = new Date().getTime() - start_time;
+          console.log(response);
+          
+              $("#container").append("<h2> Feteched value : " + response.items[0].Name + "--  " + response.items[0].Range  + "  Time for request : "  +  request_time+ " ms" + "</h2>");
+              var time = parseInt($("#tt").text());
+              time = time +  parseInt(request_time);
+              $("#tt").text(time);
+
+        },
+        error: function(xhr) {
+          //Do Something to handle error
+          var request_time = new Date().getTime() - start_time;
+          $("#container").append("<h2> API request failed for : " + p + "  Time for request : "  +  request_time+ " ms" + "</h2>");
+        }
+    });
+
+
+    }
+
+
   
     function ajax_insert(p,q)
     {
@@ -81,6 +124,11 @@
     <label for="p">Enter number of api requests</label>
     <input type="text" name="p" id="add"/>
     <input type="button" id="s" value="Benchmark Now!">
+
+    <h3>Benchmark retrieve api</h3>
+    <label for="g">Enter number of api requests</label>
+    <input type="text" name="g" id="sget"/>
+    <input type="button" id="ss" value="Benchmark Now!">
 
    
 
