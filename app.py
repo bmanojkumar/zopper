@@ -16,6 +16,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 db = SQLAlchemy(app)
 cors = CORS(app)
 cache = Cache(app,config={'CACHE_TYPE': 'simple'})
+admin = Admin(app)
 
 
 class Sighting(db.Model):
@@ -32,6 +33,7 @@ class Sighting(db.Model):
 db.create_all()
 db.session.commit()
 
+admin.add_view(ModelView(Sighting, db.session))
 
 @app.route('/')
 def index():
@@ -181,6 +183,4 @@ def getDevice(device_id):
 		return jsonify(items=json_results)
 
 if __name__ == '__main__':
-	admin = Admin(app)
-	admin.add_view(ModelView(Sighting, db.session))
 	app.run(debug=True)
