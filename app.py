@@ -49,20 +49,21 @@ def bench():
 @app.route('/api/devices/delete',methods=['DELETE'])
 #@cache.cached(timeout=50)
 def dDev():
+	if (request.method == 'DELETE'):
+		if not (request.form.get('trange') is None): 
+			m = request.form.get('trange')
 
-	if not (request.form.get('trange') is None): 
-		m = request.form.get('trange')
+			try:
 
-		try:
-
-			sql = text('DELETE from devices where trange = :f')
-	#			query = "SELECT name from devices where trange >= 600 AND trange <= 800" 
-	#			results = Sighting.query.from_statement(query).all()
-			results = db.engine.execute(sql,f=m)
-			return jsonify(status={"success" : "Delete successfull"})
-		except:
-			return jsonify(status={"err" : "Unable to delete."})
-	return jsonify(status={"err" : "Unable to delete."})
+				sql = text('DELETE from devices where trange = :f')
+		#			query = "SELECT name from devices where trange >= 600 AND trange <= 800" 
+		#			results = Sighting.query.from_statement(query).all()
+				results = db.engine.execute(sql,f=m)
+				return jsonify(status={"success" : "Delete successfull"})
+			except:
+				return jsonify(status={"err" : "Unable to delete."})
+		return jsonify(status={"err" : "Unable to delete."})
+	return jsonify(status={"err" : "Not a delete,request"})
 
 
 
@@ -99,10 +100,10 @@ def getDevicesk():
 				db.session.add(dev)
 				db.session.commit()
 			except:
-				return jsonify(error={"err" : "Unable to insert."})
+				return jsonify(success=True)
 
-			return jsonify(status={"success" : "Insert successfull"})
-	return jsonify(error={"err" : "Unable to insert."})	
+			return jsonify(success=True)
+	return jsonify(success=True)	
 
 
 
@@ -117,12 +118,12 @@ def pDev():
 			try:
 
 				sql = text('UPDATE devices SET trange = :f where name = :g')
-				results = db.engine.execute(sql,f=m,g=n)
+				results = db.engine.execute(sql,f=f,g=g)
 			except:
-				return jsonify(error={"err" : "Unable to update."})
+				return jsonify(error={"err" : "Unable to update failed"})
 
 			return jsonify(status={"success" : "Update successfull"})
-	return jsonify(error={"err" : "Unable to Update."})	
+	return jsonify(error={"err" : "Unable to Update,not a put request"})	
 
 	
 	
