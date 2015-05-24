@@ -5,6 +5,8 @@ from sqlalchemy.sql import text
 from flask.ext.cors import CORS
 from flask.ext.cache import Cache
 import os
+from flask_admin import Admin
+from flask_admin.contrib.sqla import ModelView
 
 
 
@@ -14,8 +16,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 db = SQLAlchemy(app)
 cors = CORS(app)
 cache = Cache(app,config={'CACHE_TYPE': 'simple'})
-
-
 
 
 class Sighting(db.Model):
@@ -181,4 +181,6 @@ def getDevice(device_id):
 		return jsonify(items=json_results)
 
 if __name__ == '__main__':
+	admin = Admin(app)
+	admin.add_view(ModelView(Sighting, db.session))
 	app.run(debug=True)
