@@ -27,9 +27,14 @@
           //Do Something
           console.log(response);
           $("#container").empty();
+
+          if(response.items.length == 0)
+          {
+             $("#container").append("<h6>" + "No results" + "</h6>");
+          }
           for(var i=0;i<response.items.length;i++)
           {
-              $("#container").append("<p>" + response.items[i].Name + "</p>");
+              $("#container").append("<tr><td>" + response.items[i].Name + "</td></tr>");
           }
         },
         error: function(xhr) {
@@ -51,9 +56,13 @@
           //Do Something
           console.log(response);
           $("#container").empty();
+          if(response.items.length == 0)
+          {
+             $("#container").append("<h6>" + "No results" + "</h6>");
+          }
           for(var i=0;i<response.items.length;i++)
           {
-              $("#container").append("<p>" + response.items[i].Name +  " -- " +  response.items[i].Range + "</p>");
+              $("#container").append("<tr><td>" + response.items[i].Name +  "</td><td>" +  response.items[i].Range + "</td></tr>");
           }
         },
         error: function(xhr) {
@@ -71,22 +80,24 @@
   <body>   
     <header>
       <div class="container">
-        <h1 class="logo">Flask App</h1>
       </div>
     </header> 
 
+    <p>Search by name</p>
     <input type="text" id="a1">
     <input type="button" id="s" value="Submit">
 
+
+    <p>Search by range</p>
     <input type="text" id="b1">
     <input type="text" id="b2">
     <input type="button" id="s1" value="Submit">
 
 
 
-    <div id="container">
+    <table id="container" border=1>
     
-    </div>
+    </table>
 
     <div id="container2">
     

@@ -44,6 +44,33 @@ def index():
 def bench():
 	return render_template('benchmark.html')
 
+@app.route('/birdseyeview/<int:page>',methods=['GET'])
+def birdseye(page):
+	end = page*10;
+	start = end - 9;
+
+	#sql = text('SELECT COUNT(*) from devices')
+	#rown = db.engine.execute(sql)
+	#row_num = rown.rowcount
+	row_num = db.session.query(Sighting).count()
+	print "**************************************8"
+	#print rown.rowcount
+
+	if row_num < end:
+		end = row_num
+
+	sql = text('SELECT name,trange from devices where id >= :s AND id <= :e')
+	results = db.engine.execute(sql,s=start,e=end)
+
+	r = int(row_num)/10
+	if row_num%10 != 0:
+		r = r+1
+
+	return render_template('birdseyeview.html',db_results = results,rows = str(row_num), count = r)
+
+
+	
+
 
 #ok
 @app.route('/api/devices/delete',methods=['DELETE'])

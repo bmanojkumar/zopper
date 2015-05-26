@@ -6,6 +6,17 @@
   $(document).ready(function() {
   
 
+    $(document).ajaxStart(function(){
+        startTime = new Date();
+    });
+
+    $(document).ajaxStop(function(){
+        endTime = new Date();
+        console.log("total time required : ",endTime - startTime); //Total time in milliseconds including time spent in success or error callbacks
+        console.log('******************************');
+        alert((endTime - startTime)/1000);
+    });
+
     function randomstring(L){
     var s= '';
     var randomchar=function(){
@@ -33,7 +44,8 @@
     });
 
     $( "#ss" ).click(function() {
-                $("#container").empty();
+          $("#tt").text(0);
+          $("#container").empty();
 
         var a  = $("#sget").val();
           while(a > 0)
@@ -42,6 +54,7 @@
             ajax_get(q);
             a = a-1;
           }
+          
         
     });
 
@@ -54,15 +67,27 @@
         type: "get", 
         dataType: 'json',
         success: function(response) {
-          //Do Something
-          var request_time = new Date().getTime() - start_time;
-          console.log(response);
           
-              $("#container").append("<h2> Feteched value : " + response.items[0].Name + "--  " + response.items[0].Range  + "  Time for request : "  +  request_time+ " ms" + "</h2>");
-              var time = parseInt($("#tt").text());
-              time = time +  parseInt(request_time);
-              $("#tt").text(time);
+          var request_time = new Date().getTime() - start_time;
+          console.log(request_time);
 
+          if(typeof response.items[0] === 'undefined'){
+                  // your code here.
+            }
+            else
+            {
+                
+               $("#container").append("<h2> Feteched value : " + response.items[0].Name + "--  " + response.items[0].Range  + "  Time for request : "  +  request_time+ " ms" + "</h2>");
+              
+                //var time = parseInt($("#tt").text());
+                //time = time +  parseInt(request_time);
+                //$("#tt").text(time);
+
+                
+            }
+          
+          
+         
         },
         error: function(xhr) {
           //Do Something to handle error
@@ -90,9 +115,9 @@
           console.log(response);
           
               $("#container").append("<h2> Inserted value : " + p + "--  " + q  + "  Time for request : "  +  request_time+ " ms" + "</h2>");
-              var time = parseInt($("#tt").text());
-              time = time +  parseInt(request_time);
-              $("#tt").text(time);
+              //var time = parseInt($("#tt").text());
+              //time = time +  parseInt(request_time);
+              //$("#tt").text(time);
 
         },
         error: function(xhr) {
@@ -116,7 +141,7 @@
     <header>
       <div class="container">
         <h1 class="logo">Flask App</h1>
-        <div id="tt">0</div>
+        <div id="tt"></div>
       </div>
     </header> 
 
