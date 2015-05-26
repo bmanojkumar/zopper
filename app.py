@@ -53,7 +53,7 @@ def birdseye(page):
 	#rown = db.engine.execute(sql)
 	#row_num = rown.rowcount
 	row_num = db.session.query(Sighting).count()
-	print "**************************************8"
+	#print "**************************************8"
 	#print rown.rowcount
 
 	if row_num < end:
