@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+  <script>
+  $(document).ready(function() {
+  
+
+    
+
+  });
+  </script>
+  </head>
+  <p>Total rows: </p> {{ rows }}
+  <body>   
+    <header>
+      <div class="container">
+      </div>
+    </header> 
+
+    {% for result in db_results %}
+    <p>{{ result.name }}</p>
+    {% endfor %}
+
+    
+    
+    {% for i in range(1, count+1): %}
+     <a href="/birdseyeview/{{ i }}" > {{ i }}</a>
+     {%endfor%}
+
+
+
+    
+    
+    <div id="container2">
+    
+    </div>
+
+  </body>
+</html>
