@@ -1,7 +1,17 @@
 #!/usr/bin/python
 import psycopg2,csv,re
 
-conn = psycopg2.connect(database="postgres", user="zopper", password="zopper", host="127.0.0.1", port="5432")
+#database credentials
+
+db = "postgres"
+username = "zopper"
+pswrd = "zopper"
+host = "127.0.0.1"
+port = "5432"
+
+
+#connection to database
+conn = psycopg2.connect(database=db, user=username, password=pswrd, host=host, port=port)
 cur = conn.cursor()
 
 cur.execute("CREATE TABLE Devices(Id SERIAL, Name TEXT, tRange INT)")

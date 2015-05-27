@@ -9,16 +9,17 @@ from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 
 
-
+#initiaze Flask
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://zopper:zopper@localhost/postgres'
-db = SQLAlchemy(app)
-cors = CORS(app)
-cache = Cache(app,config={'CACHE_TYPE': 'simple'})
-admin = Admin(app)
+#Connecting to database
+#app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://zopper:zopper@localhost/postgres'
+db = SQLAlchemy(app)  #initialize SQLAlchemy
+cors = CORS(app)    #enable Cross origin requests
+cache = Cache(app,config={'CACHE_TYPE': 'simple'}) #used for cacheing requests
+admin = Admin(app) #for admin panel "/admin"
 
-
+#the ORM model
 class Sighting(db.Model):
   __tablename__ = 'devices'
   id = db.Column(db.Integer, primary_key = True)
@@ -35,33 +36,30 @@ db.session.commit()
 
 admin.add_view(ModelView(Sighting, db.session))
 
+#home route
 @app.route('/')
 def index():
 	return render_template('home.html')
 
-
+#benchmark route
 @app.route('/benchmark')
 def bench():
 	return render_template('benchmark.html')
 
+#birds eye view
 @app.route('/birdseyeview/<int:page>',methods=['GET'])
 def birdseye(page):
-	end = page*10;
-	start = end - 9;
-
-	#sql = text('SELECT COUNT(*) from devices')
-	#rown = db.engine.execute(sql)
-	#row_num = rown.rowcount
+	end = page*10;  #start index
+	start = end - 9; #end index
 	row_num = db.session.query(Sighting).count()
-	#print "**************************************8"
-	#print rown.rowcount
 
-	if row_num < end:
+	if row_num < end:	# for last page, to avoid overflow
 		end = row_num
 
 	sql = text('SELECT name,trange from devices where id >= :s AND id <= :e')
 	results = db.engine.execute(sql,s=start,e=end)
 
+	# total no of pages, in which we can fit the rows
 	r = int(row_num)/10
 	if row_num%10 != 0:
 		r = r+1
@@ -69,10 +67,7 @@ def birdseye(page):
 	return render_template('birdseyeview.html',db_results = results,rows = str(row_num), count = r)
 
 
-	
-
-
-#ok
+#delete API
 @app.route('/api/devices/delete',methods=['DELETE'])
 #@cache.cached(timeout=50)
 def dDev():
@@ -83,8 +78,6 @@ def dDev():
 			try:
 
 				sql = text('DELETE from devices where trange = :f')
-		#			query = "SELECT name from devices where trange >= 600 AND trange <= 800" 
-		#			results = Sighting.query.from_statement(query).all()
 				results = db.engine.execute(sql,f=m)
 				return jsonify(status={"success" : "Delete successfull"})
 			except:
@@ -93,28 +86,6 @@ def dDev():
 	return jsonify(status={"err" : "Not a delete,request"})
 
 
-
-# @app.route('/api/devices/temp/add',methods=['POST'])
-# def cDev():
-
-# 	if not request.json or not 'fname' in request.json or not 'trange' in request.json:
-# 		return jsonify(error={"err" : "Unable to insert."})
-
-# 	n = request.json['fname']
-# 	m = request.json['trange']
-
-# 	dev = Sighting(n, m)
-# 	try:
-
-# 		db.session.add(dev)
-# 		db.session.commit()
-# 	except:
-# 		return jsonify(error={"err" : "Unable to insert."})
-
-# 	return jsonify(status={"success" : "Insert successfull"})
-	
-
-#ok ok
 @app.route('/api/devices/add',methods=['POST'])
 def getDevicesk():
 	if (request.method == 'POST'):
@@ -134,9 +105,7 @@ def getDevicesk():
 
 
 
-#not ok
 @app.route('/api/devices/update',methods=['PUT'])
-#@cache.cached(timeout=50,key_prefix="update")
 def pDev():
 	if (request.method == 'PUT'):
 		if not (request.form.get('fname') is None and request.form.get('trange') is None): 
@@ -154,9 +123,6 @@ def pDev():
 
 	
 	
-
-
-#OK
 @app.route('/api/devices/namesearch',methods=['GET','POST'])
 def getDevicesname():
 	if (request.method == 'GET'):
@@ -174,7 +140,6 @@ def getDevicesname():
 				return jsonify(items=json_results)
 
 
-#OK
 @app.route('/api/devices/range',methods=['GET','POST'])
 def getDevices():
 	if (request.method == 'GET'):
@@ -182,8 +147,6 @@ def getDevices():
 			f = request.args.get('from')
 			t = request.args.get('to')
 			sql = text('SELECT name from devices where trange >= :f AND trange <= :t')
-#			query = "SELECT name from devices where trange >= 600 AND trange <= 800" 
-#			results = Sighting.query.from_statement(query).all()
 			results = db.engine.execute(sql,f=f,t=t)
 
 			json_results = []
@@ -193,11 +156,6 @@ def getDevices():
 
 			return jsonify(items=json_results)
 
-
-
-
-
-#OK
 @app.route('/api/devices/<int:device_id>',methods=['GET'])
 def getDevice(device_id):
 	if request.method == 'GET':
