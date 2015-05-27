@@ -1,0 +1,14 @@
+curl -i -H "Accept: application/json" -X PUT -d "fname=james&trange=90" https://elixier.herokuapp.com/api/devices/update
+
+
+curl -i -H "Accept: application/json" -X DELETE -d "trange=90" https://elixier.herokuapp.com/api/devices/delete
+
+
+curl -i -H "Accept: application/json" -X POST -d "fname=james&trange=90" https://elixier.herokuapp.com/api/devices/add
+
+
+curl -i -H "Accept: application/json" -X GET  https://elixier.herokuapp.com/api/devices/namesearch?fname=james
+
+
+
+
